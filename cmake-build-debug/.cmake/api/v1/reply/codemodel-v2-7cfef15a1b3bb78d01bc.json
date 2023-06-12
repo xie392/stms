@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "D:/Code/stms/cmake-build-debug",
-		"source" : "D:/Code/stms"
+		"build" : "F:/data_structure/stms/cmake-build-debug",
+		"source" : "F:/data_structure/stms"
 	},
 	"version" : 
 	{
