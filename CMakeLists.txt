@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
-project(stms)
+project(stms C)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_C_STANDARD 11)
 
-add_executable(stms main.cpp student.h student.cpp)
+add_executable(stms main.c student.h student.h student.c ../../../file.cpp)

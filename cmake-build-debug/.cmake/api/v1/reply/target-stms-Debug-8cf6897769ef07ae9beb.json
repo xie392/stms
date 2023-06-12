@@ -41,10 +41,10 @@
 					"fragment" : "-g -fdiagnostics-color=always"
 				},
 				{
-					"fragment" : "-std=gnu++11"
+					"fragment" : "-std=gnu11"
 				}
 			],
-			"language" : "CXX",
+			"language" : "C",
 			"languageStandard" : 
 			{
 				"backtraces" : 
@@ -78,7 +78,7 @@
 				"role" : "libraries"
 			}
 		],
-		"language" : "CXX"
+		"language" : "C"
 	},
 	"name" : "stms",
 	"nameOnDisk" : "stms.exe",
@@ -110,7 +110,7 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "main.cpp",
+			"path" : "main.c",
 			"sourceGroupIndex" : 0
 		},
 		{
@@ -121,7 +121,7 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "student.cpp",
+			"path" : "student.c",
 			"sourceGroupIndex" : 0
 		}
 	],
