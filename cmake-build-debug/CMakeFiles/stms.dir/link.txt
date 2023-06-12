@@ -1,3 +1,0 @@
-"E:\Program Files (x86)\CLion 2022.3.3\bin\cmake\win\x64\bin\cmake.exe" -E rm -f CMakeFiles\stms.dir/objects.a
-"E:\Program Files (x86)\CLion 2022.3.3\bin\mingw\bin\ar.exe" qc CMakeFiles\stms.dir/objects.a @CMakeFiles\stms.dir\objects1.rsp
-"E:\Program Files (x86)\CLion 2022.3.3\bin\mingw\bin\g++.exe" -g -Wl,--whole-archive CMakeFiles\stms.dir/objects.a -Wl,--no-whole-archive -o stms.exe -Wl,--out-implib,libstms.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\stms.dir\linklibs.rsp
