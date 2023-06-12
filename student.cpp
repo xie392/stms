@@ -2,8 +2,7 @@
 // Created by 26363 on 2023/6/12.
 //
 #include "student.h"
-#include <iostream>
-#include <stdlib.h>
+namespace std
 
 /**
  * TODO:初始化,把db/student.txt文件中的学生信息读取到内存中
@@ -68,7 +67,7 @@ void Student::addStudent() {
  */
 void Student::deleteStudent() {
     std::cout << "请输入要删除的学生学号：";
-    int sno;
+    std::string sno;
     std::cin >> sno;
 
     // 查找学生
@@ -86,7 +85,7 @@ void Student::modifyStudent() {}
  * 查找学生
  * @return
  */
-stu *Student::searchStudentSno(datatype sno) {
+stu *Student::searchStudent(char str[MAX_NAME_LEN]) {
     stu *pre = NULL, *p;
     if(!student) {
         std::cout << "学生信息为空" << std::endl;
@@ -96,7 +95,7 @@ stu *Student::searchStudentSno(datatype sno) {
     p = student;
 
     // 遍历链表,查找学生
-    while (p && p->sno != sno) {
+    while (p && p->sno != str || p->name != str) {
         pre = p;
         p = p->next;
     }

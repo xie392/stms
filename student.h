@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <iostream>
 
+#define MAX_SNO_LEN 20                  // 学号最大长度
 #define MAX_NAME_LEN 20                 // 姓名最大长度
 #define MAX_BIRTHDAY_LEN 20             // 出生日期最大长度
 #define MAX_ADDRESS_LEN 100             // 家庭住址最大长度
@@ -17,7 +18,7 @@
 #define datatype int                    // 定义数据类型
 
 typedef struct student{
-    datatype sno;                       // 学号
+    char sno[MAX_SNO_LEN];              // 学号
     char name[MAX_NAME_LEN];            // 姓名
     datatype age;                       // 年龄
     char gender[2];                     // 性别
@@ -37,9 +38,8 @@ public:
     void addStudent();                  // 添加学生
     void deleteStudent();               // 删除学生
     void modifyStudent();               // 修改学生
-    stu *searchStudentSno(datatype sno);// 查找学生,按学号查找
-    stu *searchStudentName(char name[MAX_NAME_LEN]);    // 查找学生,按姓名查找
-    void showAllStudent();              // 显示所有学生
+    stu *searchStudent(char str[MAX_NAME_LEN]);             // 查找学生,按学号或姓名查找
+    void showAllStudent();              // 显示学生信息
     void menu();                        // 菜单
 };
 
