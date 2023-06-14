@@ -1,375 +1,270 @@
-//
-// Created by 26363 on 2023/6/12.
-//
 #include "student.h"
-#include <cstdlib>
-#include <fstream>
-#include <string.h>
-#include "model.cpp"
 
-Model model("db/student.bin");
-
-/**
- * 初始化,把db/student文件中的学生信息读取到内存中
- * @return
- */
-void Student::init()
+Stu *Student::init()
 {
-    // 读取 db 目录下的 student.bin 文件
-    fstream fp;
-    fp.open("db/student.bin", ios::in | ios::binary);
+    this->total = 0;
+    Stu *S = new Stu;
+    S->next = NULL;
+    return S;
 
-    // 头指针指向链表的第一个节点
-    stu *head = NULL;
+    // 为学生信息分配内存
+    // this->data = new Stu;
+    // 初始化学生总数
+    // this->total = 0;
 
-    while (fp && fp.read((char *)student, sizeof(stu)))
-    {
-        // 创建一个新的节点
-        stu *new_student = new stu;
-        // 将读取的数据存储到新节点中
-        memcpy(new_student, student, sizeof(stu));
+    // 以二进制读的方式打开文件
+    // TODO: 写入数据到 data->info
+    // fstream fp(FILE_NAME, ios::in | ios::binary);
 
-        // 如果是第一个学生
-        if (!head)
-        {
-            head = new_student;
-        }
-        else
-        {
-            // 否则添加到链表末尾
-            stu *current = head;
-            while (current->next)
-            {
-                current = current->next;
-            }
-            current->next = new_student;
-        }
-    }
-
-    // 将头指针赋值给成员变量
-    student = head;
-
-    // 关闭文件
-    fp.close();
+    // if (!fp.is_open())
+    // {
+    //     throw runtime_error("文件打开失败");
+    // }
+    // fp.close();
 }
 
-/**
- * TODO:追加写入学生信息
- * @param s   学生信息
- * @return
- */
-void Student::wirteStudent(stu *s)
+Stu *Student::find(Stu *S, string str)
 {
-    // 写入 db 目录下的 student 文件
-    fstream fp;
+    Stu *p = S;
 
-    // 以二进制方式打开文件
-    fp.open("db/student.bin", ios::out | ios::app | ios::binary);
+    int i = 0;
 
-    // 如果文件打开失败
-    if (!fp)
+    if (str != "" && this->total == 0)
     {
-        cout << "文件打开失败" << endl;
-        return;
-    }
-
-    // 写入文件
-    fp.write((char *)s, sizeof(stu));
-
-    // 关闭文件
-    fp.close();
-}
-
-/**
- * 添加学生
- * @return
- */
-void Student::addStudent()
-{
-    // 为新的学生分配内存
-    stu *s;
-    s = (stu *)malloc(sizeof(stu));
-
-    cout << "请输入学号：";
-    cin >> s->sno;
-
-    stu *p = searchStudent(s->sno);
-    if (p)
-    {
-        cout << "学号已存在" << endl;
-        return;
-    }
-
-    cout << "请输入姓名：";
-    cin >> s->name;
-    cout << "请输入年龄：";
-    cin >> s->age;
-    cout << "请输入性别：";
-    cin >> s->gender;
-    cout << "请输入出生日期：";
-    cin >> s->birthday;
-    cout << "请输入家庭住址：";
-    cin >> s->address;
-    cout << "请输入电话：";
-    cin >> s->phone;
-    cout << "请输入邮箱：";
-    cin >> s->email;
-
-    s->total = s->total ? s->total + 1 : 1;
-
-    // 如果是第一个学生
-    if (!student)
-    {
-        student = s;
-    }
-    else
-    {
-        // 指向下一个学生的指针
-        student->next = s;
-    }
-
-    // TODO:写入 db 目录下的 student.bin 文件
-    wirteStudent(s);
-
-    // 释放内存
-    free(s);
-}
-
-/**
- * 删除学生
- * @return
- */
-void Student::deleteStudent()
-{
-    cout << "请输入要删除的学生学号：";
-    char sno[MAX_BUFFER_LEN];
-    cin >> sno;
-
-    // 查找学生
-    stu *p = searchStudent(sno);
-
-    if (!p)
-    {
-        cout << "没有该学生" << endl;
-    }
-
-    // 如果是第一个学生
-    if (p == student)
-    {
-        student = student->next;
-    }
-    else
-    {
-        stu *pre = student;
-        while (pre->next != p)
-        {
-            pre = pre->next;
-        }
-        pre->next = p->next;
-    }
-}
-
-/**
- * 修改学生
- * @return
- */
-void Student::modifyStudent()
-{
-    cout << "请输入要修改的学生学号：";
-    char sno[MAX_BUFFER_LEN];
-    cin >> sno;
-
-    // 查找学生
-    stu *p = searchStudent(sno);
-
-    if (!p)
-    {
-        cout << "学号不存在" << endl;
-        return;
-    }
-
-    // 输出学生信息
-    cout << "   学号   " << p->sno;
-    cout << "   姓名   " << p->name;
-    cout << "   年龄   " << p->age;
-    cout << "   性别   " << p->gender;
-
-    while (true)
-    {
-        cout << "请选择你要修改的信息：" << endl;
-        cout << "1.姓名" << endl;
-        cout << "2.年龄" << endl;
-        cout << "3.性别" << endl;
-        cout << "4.出生日期" << endl;
-        cout << "5.家庭住址" << endl;
-        cout << "6.电话" << endl;
-        cout << "7.邮箱" << endl;
-        cout << "0.退出修改" << endl;
-
-        int choice;
-        cin >> choice;
-
-        switch (choice)
-        {
-        case 1:
-            cout << "请输入姓名：";
-            cin >> p->name;
-            break;
-        case 2:
-            cout << "请输入年龄：";
-            cin >> p->age;
-            break;
-        case 3:
-            cout << "请输入性别：";
-            cin >> p->gender;
-        case 4:
-            cout << "请输入出生日期：";
-            cin >> p->birthday;
-        case 5:
-            cout << "请输入家庭住址：";
-            cin >> p->address;
-        case 6:
-            cout << "请输入电话：";
-            cin >> p->phone;
-        case 7:
-            cout << "请输入邮箱：";
-            cin >> p->email;
-        case 0:
-            return;
-        default:
-            cout << "输入错误，请重新输入" << endl;
-            break;
-        }
-    }
-}
-
-/**
- * 查找学生
- * @param str       学号或姓名
- * @return
- */
-stu *Student::searchStudent(char str[MAX_BUFFER_LEN])
-{
-    stu *pre = NULL, *p;
-
-    if (!student)
-    {
+        std::cout << "没有该学生信息" << endl;
         return NULL;
     }
 
-    p = student;
+    std::cout << "stotal: " << this->total << endl;
 
-    // 遍历链表,查找学生
-    while (p && (strcmp(p->sno, str) != 0) && (strcmp(p->name, str) != 0))
+    // if (this->total > 0)
+    // {
+    //     std::cout << "s: " << S << endl;
+    //     std::cout << "s->info: " << S->info << endl;
+    //     std::cout << "s->info->name: " << S->info->name << endl;
+    //     std::cout << "s->info->sno: " << S->info->sno << endl;
+    // }
+
+    // 寻找最后一个学生
+    while (p && i++ < this->total)
     {
-        pre = p;
+        std::cout << "p: " << p << endl;
+        std::cout << "p->info: " << p->info << endl;
+        std::cout << "p->info->name: " << p->info->name << endl;
+        std::cout << "p->info->sno: " << p->info->sno << endl;
+        // 如果要查找学生，那就匹配学号或者姓名，如果匹配成功就退出循环
+        // if (str != "" && (p->info->sno != str || p->info->name != str))
+        // {
+        //     std::cout << "查找成功: " << p->info->sno << std::endl;
+        //     break;
+        // }
         p = p->next;
     }
-
-    if (!p)
-    {
-        return NULL;
-    }
-
-    // 如果要删除的学生是第一个学生
-    if (!pre)
-    {
-        student = p->next;
-    }
-    else
-    {
-        pre->next = p->next;
-    }
-
-    free(p);
-
-    return student;
+    return p;
 }
 
-/**
- * 显示所有学生
- * @return
- */
-void Student::showAllStudent()
+student *Student::addInput()
 {
-    fstream fp;
+    // 为新的学生分配内存
+    student *stu = new student;
+    stu->sno = "123";
+    stu->name = "123";
+    // std::cout << "请输入学号：";
+    // std::cin >> stu->sno;
+    // TODO:检查学号是否重复
+    // stu *p = searchStudent(s->sno);
+    // if (p)
+    // {
+    //     std::cout << "学号已存在" << endl;
+    //     return;
+    // }
+    // std::cout << "请输入姓名：";
+    // std::cin >> stu->name;
+    // std::cout << "请输入年龄：";
+    // std::cin >> stu->age;
+    // std::cout << "请输入性别：";
+    // std::cin >> stu->gender;
+    // std::cout << "请输入出生日期：";
+    // std::cin >> stu->birthday;
+    // std::cout << "请输入家庭住址：";
+    // std::cin >> stu->address;
+    // std::cout << "请输入电话：";
+    // std::cin >> stu->phone;
+    // std::cout << "请输入邮箱：";
+    // std::cin >> stu->email;
 
-    // 以二进制方式打开文件
-    fp.open("db/student.bin", ios::in | ios::binary);
-
-    // 如果文件打开失败
-    if (!fp)
-    {
-        cout << "文件打开失败" << endl;
-        return;
-    }
-
-    cout << " |学号\t|\t姓名\t|\t年龄\t|\t性别\t|\t出生日期\t|\t家庭地址\t|\t电话\t|\t邮箱\t| " << endl;
-    cout << endl;
-
-    // 读取文件
-    while (fp.read((char *)student, sizeof(stu)))
-    {
-        cout << " |" << student->sno << "\t|\t" << student->name << "\t|\t" << student->age << "\t|\t"
-             << student->gender << "\t|\t" << student->birthday << "\t|\t" << student->address
-             << "\t|\t" << student->phone << "\t|\t" << student->email << "\t|" << endl;
-    }
-
-    cout << endl;
-    // 关闭文件
-    fp.close();
+    return stu;
 }
 
-/**
- * 菜单
- * @return
- */
+Stu *Student::add(Stu *S, student *info)
+{
+    Stu *p = new Stu, *q;
+
+    // if (this->total > 0)
+    // {
+    //     std::cout << "1s: " << S << endl;
+    //     std::cout << "1s->info: " << S->info << endl;
+    //     std::cout << "1s->info->name: " << S->info->name << endl;
+    //     std::cout << "1s->info->sno: " << S->info->sno << endl;
+    // }
+
+    // 寻找最后一个学生
+    q = find(S);
+
+    std::cout << "查找到p: " << q << endl;
+
+    // 将新学生添加到链表尾部
+    // p->info = info;
+    // p->next = q->next;
+    // q->next = p;
+
+    std::cout << "p: " << p << endl;
+    std::cout << "p->info: " << p->info << endl;
+    std::cout << "p->info->sno: " << p->info->sno << endl;
+    std::cout << "p->info->name: " << p->info->name << endl;
+
+    // p->next = NULL;
+
+    // 学生总数加1
+    this->total += 1;
+
+    return S;
+}
+
+void Student::print(student *info, bool showHead)
+{
+    // 如果需要打印表头
+    if (showHead)
+    {
+        std::cout << TABLE_HEAD << endl;
+    }
+
+    std::cout << info->sno << "\t";
+    // std::cout<< info->name << "\t";
+    // std::cout<< info->age << "\t";
+    // std::cout<< info->gender << "\t";
+    // std::cout<< info->birthday << "\t";
+    // std::cout<< info->address << "\t";
+    // std::cout<< info->phone << "\t";
+    // std::cout<< info->email << "\t";
+    std::cout << endl;
+}
+
+void Student::printAll(Stu *S)
+{
+    Stu *p;
+    p = S->next;
+    int i = 0;
+
+    // 打印表头
+    std::cout << TABLE_HEAD << endl;
+
+    // 加多判断条件，防止死循环
+    while (p && i++ < this->total)
+    {
+        print(p->info);
+        p = p->next;
+    }
+}
+
+string Student::findInput(string tips)
+{
+    string str;
+    std::cout << "请输入" << tips << "：";
+    std::cin >> str;
+    return str;
+}
+
+Stu *Student::del(Stu *S, string sno)
+{
+    Stu *p = S, *q;
+
+    // 寻找要删除的学生
+    q = find(S, sno);
+
+    std::cout << "p:" << p << endl;
+
+    // 如果没有找到要删除的学生
+    if (!q)
+    {
+        std::cout << "没有找到要删除的学生" << endl;
+        return S;
+    }
+
+    // 删除学生
+    p->next = q->next;
+    delete q;
+
+    // 学生总数减1
+    this->total -= 1;
+
+    std::cout << "已成功删除学号为 \"" << sno << "\" "
+              << "的学生" << endl;
+
+    return S;
+}
+
 void Student::menu()
 {
+    Stu *data;
+
     // 初始化
-    init();
+    data = init();
+
+    Stu *p;
 
     // 显示菜单
     while (true)
     {
-        cout << "========================= 学生管理系统start ==========================" << endl;
-        cout << "1. 添加学生" << endl;
-        cout << "2. 删除学生" << endl;
-        cout << "3. 修改学生" << endl;
-        cout << "4. 查找学生" << endl;
-        cout << "5. 显示所有学生" << endl;
-        cout << "0. 退出" << endl;
-        cout << "========================= 学生管理系统end ==========================" << endl;
-        cout << endl;
+        std::cout << endl;
+        std::cout << "========================= 学生管理系统start ==========================" << endl;
+        std::cout << "1. 添加学生" << endl;
+        std::cout << "2. 删除学生" << endl;
+        std::cout << "3. 修改学生" << endl;
+        std::cout << "4. 查找学生" << endl;
+        std::cout << "5. 删除学生" << endl;
+        std::cout << "6. 显示所有学生" << endl;
+        std::cout << "0. 退出" << endl;
+        std::cout << "========================= 学生管理系统end ==========================" << endl;
+        std::cout << endl;
 
         int choice;
-        cout << "请输入你的选择：";
+        std::cout << "请输入你的选择：";
         cin >> choice;
-        cout << endl;
+        std::cout << endl;
 
         switch (choice)
         {
         case 1:
-            addStudent();
+            if(this->total>0){printAll(data);}
+            data = add(data, addInput());
             break;
         case 2:
-            deleteStudent();
+            // deleteStudent();
             break;
         case 3:
-            modifyStudent();
+
             break;
         case 4:
-            //                searchStudent();
+            p = find(data, findInput("学号或姓名"));
+            // std::cout<<"查找到的学生: " << p->info->sno << endl;
+            // if (p)
+            // {
+            //     print(p->info,true);
+            // }
             break;
         case 5:
-            showAllStudent();
+            data = del(data, findInput());
+            break;
+        case 6:
+            printAll(data);
             break;
         case 0:
+            // 保存学生信息到文件
+            // saveStudent();
             exit(0);
         default:
-            // 释放内存
-            free(student);
-            cout << "输入错误，请重新输入" << endl;
+            std::cout << "输入错误，请重新输入" << endl;
             break;
         }
     }
