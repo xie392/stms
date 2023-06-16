@@ -1,9 +1,7 @@
 #include "student.cpp"
 
-int main()
-{
-    Student student{};
-     student.menu();
+int main() {
+    init_menu();
     return 0;
-};
- 
+
+}
